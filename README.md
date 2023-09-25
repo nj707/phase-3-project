@@ -1,7 +1,14 @@
-# Outfit Maker
+# Python_Stylist
 > By Nial Johnson, Doug Hellberg, Bailey Bell, Joe Borkowski
 #
-## In this project, we are going to making an outfit designer based on a man's given closet
+## In Python_Stylist the user will be advised what to wear based on their closet, and plans.
+
+# Functionality
+
+    C - Create User Profile
+    R - Receives Data Input from User
+    U - Update Closet with New Items
+    D - Removes Items from closet after donation/sale
 
 ![Project Chart](https://github.com/nj707/phase-3-project/assets/123016202/5693f837-b084-448b-af49-8a6daecd6027)
 
