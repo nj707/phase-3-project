@@ -21,3 +21,10 @@ A user will be able to create a profile consisting of their name, and what they 
 > This will take the clothes that you have added to your closet and it will make an a general outfit for what general plans you have. Users will create a profile with their name and closet. The clothes can be updated and removed as the user aquires new clothes, or even possibly getting rid of some items.
 
 
+
+#Entity relationship diagram 
+![image](https://github.com/nj707/phase-3-project/assets/137824532/c4beebee-d5df-4c7f-819d-64600bf22a55)
+
+
+
+
