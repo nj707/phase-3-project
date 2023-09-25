@@ -5,10 +5,9 @@
 
 # Functionality
 
-    C - Create User Profile
-    R - Receives Data Input from User
-    U - Update Closet with New Items
-    D - Removes Items from closet after donation/sale
+    C - Create User Profile/Create Closet for User using ID's
+    R - Read user input/Read clothing on hand for the user
+    D - Delete User/Delete Clothing
 
 
 
