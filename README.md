@@ -23,6 +23,9 @@ A user will be able to create a profile consisting of their name, and what they 
 
 
 # Entity relationship diagram 
+
+
+
 ![image](https://github.com/nj707/phase-3-project/assets/137824532/c4beebee-d5df-4c7f-819d-64600bf22a55)
 
 
