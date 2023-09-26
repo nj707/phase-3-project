@@ -1,5 +1,5 @@
 # Python_Stylist
-> By Nial Johnson, Doug Hellberg, Bailey Bell, Joe Borkowski
+> By Nial Johnson, Doug Hellberg, Bailey Bell-Loffredo, Joe Borkowski
 #
 ## In Python_Stylist the user will be advised what to wear based on their closet, and plans.
 
