@@ -1,6 +1,7 @@
 import os;
 import tkinter as tk
 import sqlite3
+from tabulate import tabulate
 
 
 # Create a database connection and cursor
@@ -15,6 +16,8 @@ CURSOR.execute('''CREATE TABLE IF NOT EXISTS accounts (
             )''')
 CONN.commit()
 
+username_entry = ''
+password_entry = ''
 # Function to create a user account and open the clothing item addition interface
 def create_account():
     username = username_entry.get()
@@ -184,3 +187,4 @@ def account_view():
 
 
 menu()
+
