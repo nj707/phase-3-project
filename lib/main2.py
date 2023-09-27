@@ -20,6 +20,7 @@ CONN.execute('''CREATE TABLE IF NOT EXISTS clothing (
                 category TEXT,
                 color TEXT,
                 size TEXT
+                
             )''')
 CONN.commit()
 

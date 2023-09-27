@@ -1,7 +1,7 @@
 import os;
 import tkinter as tk
 import sqlite3
-from tabulate import tabulate
+
 
 
 # Create a database connection and cursor
@@ -16,9 +16,7 @@ CURSOR.execute('''CREATE TABLE IF NOT EXISTS accounts (
             )''')
 CONN.commit()
 
-username_entry = ''
-password_entry = ''
-# Function to create a user account and open the clothing item addition interface
+# Function to create a user account
 def create_account():
     username = username_entry.get()
     password = password_entry.get()
@@ -28,30 +26,33 @@ def create_account():
                     (username, password))
         CONN.commit()
         status_label.config(text="Account created successfully")
-
-        # Close the account creation window
-        root.destroy()
-
-        # Open the clothing item addition window
-        open_clothing_window()
     else:
         status_label.config(text="Please fill in both username and password fields")
 
-# Function to open the clothing item addition interface
-def open_clothing_window():
-    # Create a new window for adding clothing items
-    clothing_root = tk.Tk()
-    clothing_root.title("Clothing Inventory")
-
-    # Rest of the code for the clothing item addition interface (similar to the previous example)
-
-    # Start the clothing item addition GUI application
-    clothing_root.mainloop()
-
-# Create the main window for account creation
+# Create the main window
 root = tk.Tk()
 root.title("Account Creation")
 
+# Labels and Entry widgets for input
+username_label = tk.Label(root, text="Username:")
+username_label.pack()
+username_entry = tk.Entry(root)
+username_entry.pack()
+
+password_label = tk.Label(root, text="Password:")
+password_label.pack()
+password_entry = tk.Entry(root, show="*")  # Show '*' for password input
+password_entry.pack()
+
+# Button to create an account
+create_button = tk.Button(root, text="Create Account", command=create_account)
+create_button.pack()
+
+# Status label to display messages
+status_label = tk.Label(root, text="")
+status_label.pack()
+
+# Start the GUI application
 root.mainloop()
 
 CONN = sqlite3.connect('clothing.db')
