@@ -1,125 +1,59 @@
 import os;
-import tkinter as tk
 import sqlite3
+import ipdb;
 
-
-
-# Create a database connection and cursor
-CONN = sqlite3.connect('user_accounts.db')
+CONN = sqlite3.connect('lib/database.db')
 CURSOR = CONN.cursor()
 
-# Create a table for user accounts if it doesn't exist
-CURSOR.execute('''CREATE TABLE IF NOT EXISTS accounts (
+
+class User:
+    def __init__(self,name,age,id=None):
+        self.name = name
+        self.age = age
+        self.id = id
+
+    @classmethod
+    def create_table_user(cls):
+        sql = '''
+            CREATE TABLE IF NOT EXISTS users
+            (
                 id INTEGER PRIMARY KEY,
-                username TEXT,
-                password TEXT
-            )''')
-CONN.commit()
+                name TEXT,
+                age INTEGER
+            )
+        '''
+        CURSOR.execute(sql)
 
-# Function to create a user account
-def create_account():
-    username = username_entry.get()
-    password = password_entry.get()
 
-    if username and password:
-        CURSOR.execute("INSERT INTO accounts (username, password) VALUES (?, ?)",
-                    (username, password))
-        CONN.commit()
-        status_label.config(text="Account created successfully")
-    else:
-        status_label.config(text="Please fill in both username and password fields")
+class Clothes:
+    def __init__(self,name,type,color,pattern,style,size,user_id=None,id=None):
+        self.name = name
+        self.type = type
+        self.color = color
+        self.pattern = pattern
+        self.style = style
+        self.size = size
+        self.user_id = user_id
+        self.id = id
 
-# Create the main window
-root = tk.Tk()
-root.title("Account Creation")
-
-# Labels and Entry widgets for input
-username_label = tk.Label(root, text="Username:")
-username_label.pack()
-username_entry = tk.Entry(root)
-username_entry.pack()
-
-password_label = tk.Label(root, text="Password:")
-password_label.pack()
-password_entry = tk.Entry(root, show="*")  # Show '*' for password input
-password_entry.pack()
-
-# Button to create an account
-create_button = tk.Button(root, text="Create Account", command=create_account)
-create_button.pack()
-
-# Status label to display messages
-status_label = tk.Label(root, text="")
-status_label.pack()
-
-# Start the GUI application
-root.mainloop()
-
-CONN = sqlite3.connect('clothing.db')
-CURSOR = CONN.cursor()
-
-# Create a table for clothing items if it doesn't exist
-CURSOR.execute('''CREATE TABLE IF NOT EXISTS clothing (
+    @classmethod
+    def create_table_clothes(cls):
+        sql = '''
+            CREATE TABLE IF NOT EXISTS clothes
+            (
                 id INTEGER PRIMARY KEY,
-                item_name TEXT,
-                category TEXT,
+                name TEXT,
                 color TEXT,
-                size TEXT
-            )''')
-CONN.commit()
+                pattern TEXT,
+                style TEXT,
+                size TEXT,
+                user_id INTEGER,
+                    FOREIGN KEY(user_id) REFERENCES users(id)
+        )
+        '''
+        CURSOR.execute(sql)
 
-# Function to add a clothing item to the database
-def add_clothing():
-    item_name = item_name_entry.get()
-    category = category_entry.get()
-    color = color_entry.get()
-    size = size_entry.get()
-
-    if item_name and category and color and size:
-        CURSOR.execute("INSERT INTO clothing (item_name, category, color, size) VALUES (?, ?, ?, ?)",
-                        (item_name, category, color, size))
-        CONN.commit()
-        status_label.config(text="Clothing item added successfully")
-    else:
-        status_label.config(text="Please fill in all fields")
-
-# Create the main window
-root = tk.Tk()
-root.title("Clothing Inventory")
-
-# Labels and Entry widgets for input
-item_name_label = tk.Label(root, text="Item Name:")
-item_name_label.pack()
-item_name_entry = tk.Entry(root)
-item_name_entry.pack()
-
-category_label = tk.Label(root, text="Category:")
-category_label.pack()
-category_entry = tk.Entry(root)
-category_entry.pack()
-
-color_label = tk.Label(root, text="Color:")
-color_label.pack()
-color_entry = tk.Entry(root)
-color_entry.pack()
-
-size_label = tk.Label(root, text="Size:")
-size_label.pack()
-size_entry = tk.Entry(root)
-size_entry.pack()
-
-# Button to add clothing item
-add_button = tk.Button(root, text="Add Clothing Item", command=add_clothing)
-add_button.pack()
-
-# Status label to display messages
-status_label = tk.Label(root, text="")
-status_label.pack()
-
-# Start the GUI application
-root.mainloop()
-
-
+ipdb.set_trace()
 
 def menu ():
     os.system('cls||clear')
@@ -144,6 +78,7 @@ def menu ():
     else:
         os.system('cls||clear')
         print("Invalid input!")
+        account_input=input("Press enter to go back to the start!")
 
     pass
 
@@ -188,4 +123,3 @@ def account_view():
 
 
 menu()
-
