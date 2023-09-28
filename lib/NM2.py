@@ -84,48 +84,6 @@ class Clothes:
         print("Clothing item added to your closet.")
 
 
-
-    @classmethod
-    def view_closet(cls, user_id):
-        sql = '''
-            SELECT * FROM clothes
-            WHERE user_id = ?
-        '''
-        CURSOR.execute(sql, (user_id,))
-        clothes = CURSOR.fetchall()
-        if clothes:
-            for item in clothes:
-                print(f"ID: {item[0]}, Name: {item[1]}, Type: {item[2]}, Color: {item[3]}, Pattern: {item[4]}, Style: {item[5]}, Size: {item[6]}")
-        else:
-            print("Your closet is empty.")
-
-    @classmethod
-    def update_clothing_item(cls, item_id, name, type, color, pattern, style, size):
-        sql = '''
-            UPDATE clothes
-            SET name = ?,
-                type = ?,
-                color = ?,
-                pattern = ?,
-                style = ?,
-                size = ?
-            WHERE id = ?
-        '''
-        CURSOR.execute(sql, (name, type, color, pattern, style, size, item_id))
-        CONN.commit()
-        print("Clothing item updated successfully.")
-
-    @classmethod
-    def delete_clothing_item(cls, item_id):
-        sql = '''
-            DELETE FROM clothes
-            WHERE id = ?
-        '''
-        CURSOR.execute(sql, (item_id,))
-        CONN.commit()
-        print("Clothing item deleted successfully.")
-
-
 def menu():
     while True:
         os.system('cls||clear')
@@ -144,18 +102,13 @@ def menu():
         print("++    5. View by Attribute   ++")
         print("++    6. View All Users      ++")
         print("++    7. Add Clothing Item   ++")
-        print("++    8. View Closet         ++")
-        print("++    9. Update Clothing     ++")
-        print("++   10. Delete Clothing     ++")
         print("++    0. Exit                ++")
         print("++                           ++")
         print("+++++++++++++++++++++++++++++++")
 
-
         choice = input("Enter your choice (1-6, or 0 to exit): ")
 
         if choice in ("0", "1", "2", "3", "4", "5", "6", "7"):
-
             return choice
         else:
             os.system('cls||clear')
@@ -181,15 +134,22 @@ def account_creation():
     if account_create_input == "y":
         name = input("Enter your name: ")
         age = input("Enter your age: ")
-
-        sql = '''
-            INSERT INTO users (name, age)
-            VALUES (?, ?)
+        sql_check = '''
+            SELECT id FROM users
+            WHERE name = ?
         '''
-        CURSOR.execute(sql, (name, age))
-        CONN.commit()
-
-        print("Account created successfully.")
+        CURSOR.execute(sql_check, (name,))
+        existing_user = CURSOR.fetchone()
+        if existing_user:
+            exist_user_redirect()
+        else:
+            sql = '''
+                INSERT INTO users (name, age)
+                VALUES (?, ?)
+            '''
+            CURSOR.execute(sql, (name, age))
+            CONN.commit()
+            print("You're locked in successfully!")
     else:
         print("Have a good day!")
 
@@ -234,12 +194,21 @@ def update_user_menu():
     print("++         Update User Information        ++")
     print("++                                        ++")
     print("++++++++++++++++++++++++++++++++++++++++++++")
-    user_id = input("Enter the ID of the user you want to update: ")
     name = input("Enter the new name: ")
     age = input("Enter the new age: ")
 
-    User.update_user(user_id, name, age)
-    input("Press Enter to go back to the main menu.")
+    sql_check = '''
+        SELECT id FROM users
+        WHERE name = ?
+    '''
+    CURSOR.execute(sql_check, (name,))
+    existing_user = CURSOR.fetchone()
+
+    if existing_user is not None:
+        exist_user_redirect()
+    else:
+        User.update_user(name, age)
+        input("Press Enter to go back to the main menu.")
 
 
 def delete_user_menu():
@@ -296,46 +265,22 @@ def add_clothing_item_menu(user_id):
 
     input("Press Enter to go back to the main menu.")
 
-def view_closet_menu(user_id):
+
+def exist_user_redirect():
     os.system('cls||clear')
-    print("++++++++++++++++++++++++++++++++++++++++++++")
-    print("++                                        ++")
-    print("++          View Your Closet               ++")
-    print("++                                        ++")
-    print("++++++++++++++++++++++++++++++++++++++++++++")
-    Clothes.view_closet(user_id)
-    input("Press Enter to go back to the main menu.")
+    print("+++++++++++++++++++++++++++++++")
+    print("++                           ++")
+    print("++          Sorry!           ++")
+    print("++                           ++")
+    print("++       This Name Has       ++")
+    print("++    Already Been Taken!    ++")
+    print("++                           ++")
+    print("++ Press Enter to Try Again  ++")
+    print("++                           ++")
+    print("+++++++++++++++++++++++++++++++")
 
-def update_clothing_item_menu():
-    os.system('cls||clear')
-    print("++++++++++++++++++++++++++++++++++++++++++++")
-    print("++                                        ++")
-    print("++      Update Clothing Item in Closet     ++")
-    print("++                                        ++")
-    print("++++++++++++++++++++++++++++++++++++++++++++")
-    item_id = input("Enter the ID of the clothing item you want to update: ")
-    name = input("Enter the new name: ")
-    type = input("Enter the new type: ")
-    color = input("Enter the new color: ")
-    pattern = input("Enter the new pattern: ")
-    style = input("Enter the new style: ")
-    size = input("Enter the new size: ")
+    input("Press Enter to go back to main menu.")
 
-    Clothes.update_clothing_item(item_id, name, type, color, pattern, style, size)
-    input("Press Enter to go back to the main menu.")
-
-def delete_clothing_item_menu():
-    os.system('cls||clear')
-    print("++++++++++++++++++++++++++++++++++++++++++++")
-    print("++                                        ++")
-    print("++       Delete Clothing Item in Closet    ++")
-    print("++                                        ++")
-    print("++++++++++++++++++++++++++++++++++++++++++++")
-    item_id = input("Enter the ID of the clothing item you want to delete: ")
-    Clothes.delete_clothing_item(item_id)
-    input("Press Enter to go back to the main menu.")
-
-# ...
 
 while True:
     menu_choice = menu()
@@ -352,15 +297,9 @@ while True:
     elif menu_choice == "6":
         view_all_users_menu()
     elif menu_choice == "7":
-        user_id = input("Enter your user ID: ")
-        add_clothing_item_menu(user_id)
+        add_clothing_item_menu()
     elif menu_choice == "8":
-        user_id = input("Enter your user ID: ")
-        view_closet_menu(user_id)
-    elif menu_choice == "9":
-        update_clothing_item_menu()
-    elif menu_choice == "10":
-        delete_clothing_item_menu()
+        exist_user_redirect()
     elif menu_choice == "0":
         # Exit the program
         break
