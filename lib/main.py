@@ -1,4 +1,4 @@
-import os;
+import os
 import sqlite3
 import ipdb;
 
@@ -7,7 +7,7 @@ CURSOR = CONN.cursor()
 
 
 class User:
-    def __init__(self,name,age,id=None):
+    def __init__(self, name, age, id=None):
         self.name = name
         self.age = age
         self.id = id
@@ -26,7 +26,7 @@ class User:
 
 
 class Clothes:
-    def __init__(self,name,type,color,pattern,style,size,user_id=None,id=None):
+    def __init__(self, name, type, color, pattern, style, size, user_id=None, id=None):
         self.name = name
         self.type = type
         self.color = color
@@ -53,9 +53,11 @@ class Clothes:
         '''
         CURSOR.execute(sql)
 
+
 ipdb.set_trace()
 
-def menu ():
+
+def menu():
     os.system('cls||clear')
     print("+++++++++++++++++++++++++++++++")
     print("++                           ++")
@@ -70,17 +72,18 @@ def menu ():
     print("+++++++++++++++++++++++++++++++")
     account_input = input("Enter:")
     account_input = account_input.lower()
-    if(account_input == "y"):
+    if (account_input == "y"):
         account_creation()
-    elif(account_input == "n"):
+    elif (account_input == "n"):
         os.system('cls||clear')
         account_view()
     else:
         os.system('cls||clear')
         print("Invalid input!")
-        account_input=input("Press enter to go back to the start!")
+        account_input = input("Press enter to go back to the start!")
 
     pass
+
 
 def account_creation():
     os.system('cls||clear')
@@ -96,11 +99,13 @@ def account_creation():
     print("++++++++++++++++++++++++++++++++++++++++++")
     account_create_input = input("Enter:")
     account_create_input = account_create_input.lower()
-    if(account_create_input == "y"):
-        print ("Radical!")
+    if (account_create_input == "y"):
+        print("Radical!")
     else:
-        print ("Have a good day!")
+        print("Have a good day!")
     pass
+
+
 def account_view():
     os.system('cls||clear')
     print("++++++++++++++++++++++++++++++++++++++++++++")
@@ -115,9 +120,9 @@ def account_view():
     print("++++++++++++++++++++++++++++++++++++++++++++")
     account_view_input = input("Enter:")
     account_view_input = account_view_input.lower()
-    if(account_view_input == "y"):
+    if (account_view_input == "y"):
         account_name_input = input("Please enter your name:")
-        print (account_name_input)
+        print(account_name_input)
     else:
         print("Have a good day!")
 
