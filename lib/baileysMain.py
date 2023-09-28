@@ -154,14 +154,12 @@ def account_creation():
     print("++            Enter Y or N              ++")
     print("++                                      ++")
     print("++++++++++++++++++++++++++++++++++++++++++")
-    while True:
-        account_create_input = input("Enter:")
-        account_create_input = account_create_input.lower()
-        if (account_create_input == "y"):
-            create_account()
-            break
-        else:
-            print("Have a good day!")
+    account_create_input = input("Enter:")
+    account_create_input = account_create_input.lower()
+    if (account_create_input == "y"):
+        create_account()
+    else:
+        print("Have a good day!")
 
 
 def account_view():
