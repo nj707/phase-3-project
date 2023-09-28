@@ -134,15 +134,22 @@ def account_creation():
     if account_create_input == "y":
         name = input("Enter your name: ")
         age = input("Enter your age: ")
-
-        sql = '''
-            INSERT INTO users (name, age)
-            VALUES (?, ?)
+        sql_check = '''
+            SELECT id FROM users
+            WHERE name = ?
         '''
-        CURSOR.execute(sql, (name, age))
-        CONN.commit()
-
-        print("Account created successfully.")
+        CURSOR.execute(sql_check, (name,))
+        existing_user = CURSOR.fetchone()
+        if existing_user:
+            exist_user_redirect()
+        else:
+            sql = '''
+                INSERT INTO users (name, age)
+                VALUES (?, ?)
+            '''
+            CURSOR.execute(sql, (name, age))
+            CONN.commit()
+            print("You're locked in successfully!")
     else:
         print("Have a good day!")
 
@@ -187,12 +194,21 @@ def update_user_menu():
     print("++         Update User Information        ++")
     print("++                                        ++")
     print("++++++++++++++++++++++++++++++++++++++++++++")
-    user_id = input("Enter the ID of the user you want to update: ")
     name = input("Enter the new name: ")
     age = input("Enter the new age: ")
 
-    User.update_user(user_id, name, age)
-    input("Press Enter to go back to the main menu.")
+    sql_check = '''
+        SELECT id FROM users
+        WHERE name = ?
+    '''
+    CURSOR.execute(sql_check, (name,))
+    existing_user = CURSOR.fetchone()
+
+    if existing_user is not None:
+        exist_user_redirect()
+    else:
+        User.update_user(name, age)
+        input("Press Enter to go back to the main menu.")
 
 
 def delete_user_menu():
@@ -250,6 +266,22 @@ def add_clothing_item_menu(user_id):
     input("Press Enter to go back to the main menu.")
 
 
+def exist_user_redirect():
+    os.system('cls||clear')
+    print("+++++++++++++++++++++++++++++++")
+    print("++                           ++")
+    print("++          Sorry!           ++")
+    print("++                           ++")
+    print("++       This Name Has       ++")
+    print("++    Already Been Taken!    ++")
+    print("++                           ++")
+    print("++ Press Enter to Try Again  ++")
+    print("++                           ++")
+    print("+++++++++++++++++++++++++++++++")
+
+    input("Press Enter to go back to main menu.")
+
+
 while True:
     menu_choice = menu()
     if menu_choice == "1":
@@ -266,6 +298,8 @@ while True:
         view_all_users_menu()
     elif menu_choice == "7":
         add_clothing_item_menu()
+    elif menu_choice == "8":
+        exist_user_redirect()
     elif menu_choice == "0":
         # Exit the program
         break
