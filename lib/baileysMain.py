@@ -1,13 +1,13 @@
-import os;
+import os
 import sqlite3
-import ipdb;
+# import ipdb;
 
 CONN = sqlite3.connect('lib/database.db')
 CURSOR = CONN.cursor()
 
 
 class User:
-    def __init__(self,name,age,id=None):
+    def __init__(self, name, age, id=None):
         self.name = name
         self.age = age
         self.id = id
@@ -61,9 +61,29 @@ class User:
         else:
             print("No users found.")
 
+    @classmethod
+    def create_user(name, age):
+        sql_check = '''
+            SELECT id FROM users
+            WHERE name = ?
+            '''
+        CURSOR.execute(sql_check, (name,))
+        existing_user = CURSOR.fetchone()
+        if existing_user:
+            print(
+                f"Sorry buddy! Someone already has that username '{name}'. Try being yourself maybe?")
+        else:
+            sql = '''
+                INSERT INTO users (name, age)
+                VALUES (?, ?)
+                '''
+            CURSOR.execute(sql, (name, age))
+            CONN.commit()
+            print("You're locked in successfully!")
+
 
 class Clothes:
-    def __init__(self,name,type,color,pattern,style,size,user_id=None,id=None):
+    def __init__(self, name, type, color, pattern, style, size, user_id=None, id=None):
         self.name = name
         self.type = type
         self.color = color
@@ -90,9 +110,11 @@ class Clothes:
         '''
         CURSOR.execute(sql)
 
-ipdb.set_trace()
 
-def menu ():
+# ipdb.set_trace()
+
+
+def menu():
     os.system('cls||clear')
     print("+++++++++++++++++++++++++++++++")
     print("++                           ++")
@@ -107,17 +129,18 @@ def menu ():
     print("+++++++++++++++++++++++++++++++")
     account_input = input("Enter:")
     account_input = account_input.lower()
-    if(account_input == "y"):
+    if (account_input == "y"):
         account_creation()
-    elif(account_input == "n"):
+    elif (account_input == "n"):
         os.system('cls||clear')
         account_view()
     else:
         os.system('cls||clear')
         print("Invalid input!")
-        account_input=input("Press enter to go back to the start!")
+        account_input = input("Press enter to go back to the start!")
 
     pass
+
 
 def account_creation():
     os.system('cls||clear')
@@ -131,13 +154,16 @@ def account_creation():
     print("++            Enter Y or N              ++")
     print("++                                      ++")
     print("++++++++++++++++++++++++++++++++++++++++++")
-    account_create_input = input("Enter:")
-    account_create_input = account_create_input.lower()
-    if(account_create_input == "y"):
-        print ("Radical!")
-    else:
-        print ("Have a good day!")
-    pass
+    while True:
+        account_create_input = input("Enter:")
+        account_create_input = account_create_input.lower()
+        if (account_create_input == "y"):
+            create_account()
+            break
+        else:
+            print("Have a good day!")
+
+
 def account_view():
     os.system('cls||clear')
     print("++++++++++++++++++++++++++++++++++++++++++++")
@@ -152,9 +178,9 @@ def account_view():
     print("++++++++++++++++++++++++++++++++++++++++++++")
     account_view_input = input("Enter:")
     account_view_input = account_view_input.lower()
-    if(account_view_input == "y"):
+    if (account_view_input == "y"):
         account_name_input = input("Please enter your name:")
-        print (account_name_input)
+        print(account_name_input)
     else:
         print("Have a good day!")
 
@@ -169,9 +195,9 @@ def update_user_menu():
     user_id = input("Enter the ID of the user you want to update: ")
     name = input("Enter the new name: ")
     age = input("Enter the new age: ")
-
     User.update_user(user_id, name, age)
     input("Press Enter to go back to the main menu.")
+
 
 def delete_user_menu():
     os.system('cls||clear')
@@ -184,6 +210,7 @@ def delete_user_menu():
     User.delete_user(user_id)
     input("Press Enter to go back to the main menu.")
 
+
 def view_user_by_attribute_menu():
     os.system('cls||clear')
     print("++++++++++++++++++++++++++++++++++++++++++++")
@@ -195,6 +222,7 @@ def view_user_by_attribute_menu():
     User.view_user_by_name(name)
     input("Press Enter to go back to the main menu.")
 
+
 def view_all_users_menu():
     os.system('cls||clear')
     print("++++++++++++++++++++++++++++++++++++++++++++")
@@ -205,19 +233,46 @@ def view_all_users_menu():
     User.view_all_users()
     input("Press Enter to go back to the main menu.")
 
+
+def create_account():
+    os.system('cls||clear')
+    print("++++++++++++++++++++++++++++++++++++++++++++")
+    print("++                                        ++")
+    print("++             Create Account             ++")
+    print("++                                        ++")
+    print("++++++++++++++++++++++++++++++++++++++++++++")
+    print("++                                        ++")
+    print("++  Down Below, Please you name and age!  ++")
+    print("++                                        ++")
+    print("++++++++++++++++++++++++++++++++++++++++++++")
+    account_name = input("Enter Name: ")
+    account_age = input("Enter Age: ")
+    account_name = account_name.strip()
+    account_age = account_age.strip()
+    if account_name and account_age:
+        print(f"Name: {account_name}")
+        print(f"Age: {account_age}")
+        User.create_account(account_name, account_age)
+        input("Press Enter to go back to the main menu.")
+    else:
+        print("Invalid input. Please share your name and age! It isn't that personal BRO!")
+
+
 while True:
     menu_choice = menu()
     if menu_choice == "1":
         account_creation()
     elif menu_choice == "2":
-        account_view()
+        create_account()
     elif menu_choice == "3":
-        update_user_menu()
+        account_view()
     elif menu_choice == "4":
-        delete_user_menu()
+        update_user_menu()
     elif menu_choice == "5":
-        view_user_by_attribute_menu()
+        delete_user_menu()
     elif menu_choice == "6":
+        view_user_by_attribute_menu()
+    elif menu_choice == "7":
         view_all_users_menu()
     else:
         os.system('cls||clear')
