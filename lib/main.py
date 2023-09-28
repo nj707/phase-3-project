@@ -220,6 +220,7 @@ def account_creation():
             CURSOR.execute(sql, (name, age))
             CONN.commit()
             print("You're locked in successfully!")
+            wait_on_input = input("Press enter to go back to main menu.")
     else:
         print("Have a good day!")
 
@@ -358,13 +359,14 @@ def update_clothing_item_menu():
     Clothes.update_clothing_item(item_id, name, type, color, pattern, style, size)
     input("Press Enter to go back to the main menu.")
 
-def delete_clothing_item_menu():
+def delete_clothing_item_menu(user_id):
     os.system('cls||clear')
     print("++++++++++++++++++++++++++++++++++++++++++++")
     print("++                                        ++")
     print("++     Delete Clothing Item in Closet     ++")
     print("++                                        ++")
     print("++++++++++++++++++++++++++++++++++++++++++++")
+    Clothes.view_closet(user_id)
     item_id = input("Enter the ID of the clothing item you want to delete: ")
     Clothes.delete_clothing_item(item_id)
     input("Press Enter to go back to the main menu.")
@@ -407,7 +409,8 @@ while True:
     elif menu_choice == "9":
         update_clothing_item_menu()
     elif menu_choice == "10":
-        delete_clothing_item_menu()
+        user_id = input("Enter your user ID: ")
+        delete_clothing_item_menu(user_id)
     elif menu_choice == "0":
         # Exit the program
         break
