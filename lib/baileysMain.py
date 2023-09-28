@@ -73,51 +73,48 @@ class Clothes:
         self.user_id = user_id
         self.id = id
 
+
     @classmethod
-    def create_table_clothes(cls):
+    def add_clothing_item(cls, name, type, color, pattern, style, size, user_id):
         sql = '''
-            CREATE TABLE IF NOT EXISTS clothes
-            (
-                id INTEGER PRIMARY KEY,
-                name TEXT,
-                color TEXT,
-                pattern TEXT,
-                style TEXT,
-                size TEXT,
-                user_id INTEGER,
-                    FOREIGN KEY(user_id) REFERENCES users(id)
-        )
+            INSERT INTO clothes (name, type, color, pattern, style, size, user_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         '''
-        CURSOR.execute(sql)
+        CURSOR.execute(sql, (name, type, color, pattern, style, size, user_id))
+        CONN.commit()
+        print("Clothing item added to your closet.")
 
-ipdb.set_trace()
-
-def menu ():
-    os.system('cls||clear')
-    print("+++++++++++++++++++++++++++++++")
-    print("++                           ++")
-    print("++            Menu           ++")
-    print("++                           ++")
-    print("+++++++++++++++++++++++++++++++")
-    print("++                           ++")
-    print("++ Welcome to python_stylist ++")
-    print("++      First time here?     ++")
-    print("++       Enter Y or N        ++")
-    print("++                           ++")
-    print("+++++++++++++++++++++++++++++++")
-    account_input = input("Enter:")
-    account_input = account_input.lower()
-    if(account_input == "y"):
-        account_creation()
-    elif(account_input == "n"):
+def menu():
+    while True:
         os.system('cls||clear')
-        account_view()
-    else:
-        os.system('cls||clear')
-        print("Invalid input!")
-        account_input=input("Press enter to go back to the start!")
+        print("+++++++++++++++++++++++++++++++")
+        print("++                           ++")
+        print("++            Menu           ++")
+        print("++                           ++")
+        print("+++++++++++++++++++++++++++++++")
+        print("++                           ++")
+        print("++ Welcome to python_stylist ++")
+        print("++      First time here?     ++")
+        print("++    1. Create Account      ++")
+        print("++    2. View Account        ++")
+        print("++    3. Update User         ++")
+        print("++    4. Delete User         ++")
+        print("++    5. View by Attribute   ++")
+        print("++    6. View All Users      ++")
+        print("++    7. Add Clothing Item   ++")
+        print("++    0. Exit                ++")
+        print("++                           ++")
+        print("+++++++++++++++++++++++++++++++")
+        
+        choice = input("Enter your choice (1-6, or 0 to exit): ")
+        
+        if choice in ("0", "1", "2", "3", "4", "5", "6", "7"):
+            return choice
+        else:
+            os.system('cls||clear')
+            print("Invalid input! Please select a valid option.")
+            input("Press Enter to continue.")
 
-    pass
 
 def account_creation():
     os.system('cls||clear')
@@ -131,13 +128,25 @@ def account_creation():
     print("++            Enter Y or N              ++")
     print("++                                      ++")
     print("++++++++++++++++++++++++++++++++++++++++++")
-    account_create_input = input("Enter:")
+    account_create_input = input("Enter: ")
     account_create_input = account_create_input.lower()
-    if(account_create_input == "y"):
-        print ("Radical!")
+    
+    if account_create_input == "y":
+        name = input("Enter your name: ")
+        age = input("Enter your age: ")
+        
+        sql = '''
+            INSERT INTO users (name, age)
+            VALUES (?, ?)
+        '''
+        CURSOR.execute(sql, (name, age))
+        CONN.commit()
+        
+        print("Account created successfully.")
     else:
-        print ("Have a good day!")
-    pass
+        print("Have a good day!")
+
+
 def account_view():
     os.system('cls||clear')
     print("++++++++++++++++++++++++++++++++++++++++++++")
@@ -150,11 +159,23 @@ def account_view():
     print("++             Enter Y or N               ++")
     print("++                                        ++")
     print("++++++++++++++++++++++++++++++++++++++++++++")
-    account_view_input = input("Enter:")
+    account_view_input = input("Enter: ")
     account_view_input = account_view_input.lower()
-    if(account_view_input == "y"):
-        account_name_input = input("Please enter your name:")
-        print (account_name_input)
+    
+    if account_view_input == "y":
+        account_name_input = input("Please enter your name: ")
+        
+        sql = '''
+            SELECT * FROM users
+            WHERE name = ?
+        '''
+        CURSOR.execute(sql, (account_name_input,))
+        user = CURSOR.fetchone()
+        
+        if user:
+            print(f"ID: {user[0]}, Name: {user[1]}, Age: {user[2]}")
+        else:
+            print("User not found.")
     else:
         print("Have a good day!")
 
@@ -205,6 +226,26 @@ def view_all_users_menu():
     User.view_all_users()
     input("Press Enter to go back to the main menu.")
 
+def add_clothing_item_menu(user_id):
+    os.system('cls||clear')
+    print("++++++++++++++++++++++++++++++++++++++++++++")
+    print("++                                        ++")
+    print("++       Add Clothing Item to Closet      ++")
+    print("++                                        ++")
+    print("++++++++++++++++++++++++++++++++++++++++++++")
+    
+    name = input("Enter the clothing item's name: ")
+    type = input("Enter the clothing item's type: ")
+    color = input("Enter the clothing item's color: ")
+    pattern = input("Enter the clothing item's pattern: ")
+    style = input("Enter the clothing item's style: ")
+    size = input("Enter the clothing item's size: ")
+    
+    Clothes.add_clothing_item(name, type, color, pattern, style, size, user_id)
+    
+    input("Press Enter to go back to the main menu.")
+
+
 while True:
     menu_choice = menu()
     if menu_choice == "1":
@@ -219,7 +260,11 @@ while True:
         view_user_by_attribute_menu()
     elif menu_choice == "6":
         view_all_users_menu()
-    else:
-        os.system('cls||clear')
-        print("Invalid input! Please select a valid option.")
-        input("Press Enter to continue.")
+    elif menu_choice == "7":
+        add_clothing_item_menu()
+    elif menu_choice == "0":
+        # Exit the program
+        break
+
+
+ipdb.set_trace()
