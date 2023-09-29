@@ -1,7 +1,7 @@
 # Python_Stylist
 > By Nial Johnson, Doug Hellberg, Bailey Bell-Loffredo, Joe Borkowski
 #
-## In Python_Stylist the user will be advised what to wear based on their closet, and plans.
+## In Python_Stylist the user will able to create a virtual closet and be able to add, update and delete clothing.
 
 # Functionality
 
